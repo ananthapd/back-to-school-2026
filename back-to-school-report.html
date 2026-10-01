@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Back to School campaign performance</title>
+<style>
+  :root{ --ink:#171717; --ink-2:#404040; --mute:#737373; --faint:#a3a3a3;
+    --line:#e5e5e5; --line-2:#d4d4d4; --panel:#f5f5f5;
+    --up:#16a34a; --down:#dc2626; --warn:#b45309; --brand:#2563eb;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans);font-size:14px;
+       line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto}
+  .masthead{background:#171717;color:#fff;padding:26px 34px;display:flex;
+            justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8a8a8a}
+  .masthead h1{margin:8px 0 0;font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+  .masthead h1 span{color:#8a8a8a;font-weight:400}
+  .meta{font-family:var(--mono);font-size:10.5px;line-height:1.85;color:#8a8a8a;text-align:right}
+  .meta b{color:#e5e5e5;font-weight:400}
+  .pane{padding:0 34px 56px}
+  .sect{display:flex;align-items:baseline;gap:12px;margin:34px 0 14px}
+  .sect h2{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .sect .when{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .barlab{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+          color:var(--ink);border-bottom:1px solid var(--line-2);padding-bottom:6px;margin:0 0 10px}
+  .barlab span{color:var(--faint);letter-spacing:.08em}
+  .note{background:#fafafa;border:1px solid var(--line);border-left:2px solid var(--ink);
+        padding:13px 16px;font-size:13px;color:var(--ink-2);margin:16px 0}
+  .note b{font-weight:600;color:var(--ink)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .kpi{background:#fff;border:1px solid var(--line);padding:13px 14px 12px}
+  .kpi .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+  .kpi .v{font-family:var(--mono);font-size:23px;font-weight:500;letter-spacing:-.02em;
+          margin:7px 0 5px;font-variant-numeric:tabular-nums}
+  .kpi .d{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  table{width:100%;border-collapse:collapse}
+  .bm th,.bm td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);
+                font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+  .bm th{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute);
+         border-bottom:1px solid var(--line-2)}
+  .bm th:first-child,.bm td:first-child{text-align:left;font-family:var(--sans);font-size:13px}
+  .verdict{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+  .ahead{color:var(--up)} .behind{color:var(--down)} .level{color:var(--faint)}
+  .keyfind{background:#171717;color:#fff;padding:20px 22px;margin:18px 0}
+  .keyfind .kf{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+               text-transform:uppercase;color:#8a8a8a;margin-bottom:8px}
+  .keyfind p{margin:0 0 8px;font-size:14.5px;line-height:1.55;color:#e5e5e5}
+  .keyfind p:last-child{margin-bottom:0}
+  .keyfind b{color:#fff;font-weight:600}
+  details.sec{border-top:1px solid var(--line-2)}
+  details.sec>summary{list-style:none;cursor:pointer;padding:15px 0 14px;display:flex;
+    align-items:baseline;gap:12px;user-select:none}
+  details.sec>summary::-webkit-details-marker{display:none}
+  details.sec>summary::before{content:'+';font-family:var(--mono);font-size:15px;
+    color:var(--faint);width:14px;flex:none}
+  details.sec[open]>summary::before{content:'\2013'}
+  details.sec>summary h2{margin:0;font-size:17px;font-weight:600}
+  details.sec>summary .when{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint)}
+  details.sec>.body{padding:0 0 22px 26px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .col{background:#fff;border:1px solid var(--line);padding:16px 18px}
+  .col h3{margin:0 0 12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+          text-transform:uppercase;color:var(--mute)}
+  .col.w{border-top:2px solid var(--up)} .col.a{border-top:2px solid var(--down)}
+  .col ul{margin:0;padding:0;list-style:none}
+  .col li{padding:9px 0;border-bottom:1px dotted var(--line);font-size:13.5px;color:var(--ink-2)}
+  .col li:last-child{border-bottom:0}
+  .col li b{color:var(--ink);font-weight:600}
+  .na{font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+  .bar{display:block;height:4px;background:var(--brand);margin-top:3px}
+  footer{border-top:1px solid var(--line);margin:0 -34px;padding:22px 34px 0;
+         font-size:12.5px;color:var(--mute)}
+  footer h4{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--ink);margin:0 0 8px}
+  footer li{margin-bottom:6px}
+  @media (max-width:840px){ .cols{grid-template-columns:1fr}
+    .masthead,.pane{padding-left:22px;padding-right:22px} footer{margin:0 -22px;padding-left:22px}
+    details.sec>.body{padding-left:0} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div>
+      <div class="eyebrow">Buyer CRM &middot; seasonal</div>
+      <h1>Back to School<br><span>campaign performance</span></h1>
+    </div>
+    <div class="meta">
+      Journey <b>1054654</b><br>
+      Label <b>campaign_group: buyer_seasonal</b><br>
+      Email + Push &middot; Tableau<br>
+      PPR shown per 1k sends<br>
+      Sent <b>w/c Mon 14 Sep 2026</b><br>
+      Generated <b>Thu 1 Oct 2026</b>
+    </div>
+  </div>
+  <div class="pane" id="p"></div>
+</div>
+
+<script>
+/* ============================================================
+   Back to School, journey 1054654. A single seasonal burst, not an
+   ongoing flow: email 1 and email 2 both sent in w/c 14 Sep 2026
+   across 10 trigger categories.
+   Email: Tableau "Email - Country-Date-Domain-Campaign", campaigns matching
+   buyer_seasonal_backtoschool_*. Push: CRM - Push-SMS-Whatsapp Reporting,
+   Attribution Mode = any_7d_post_send.
+   Seller-side backtoschool campaigns are excluded: different audience.
+   ============================================================ */
+
+const CATS=[
+  ['Tutoring',        162059,10698,293,186,26,114.59],
+  ['Guitar',           52998, 3103, 60, 29,16, 34.99],
+  ['Handyman',         47335, 3809,113, 53,15,149.74],
+  ['Maths tutoring',   43886, 2768, 45, 35,13, 46.28],
+  ['Piano',            43331, 2684, 79, 33,18, 17.85],
+  ['Singing lessons',  41154, 1934, 26, 12, 1,  0.00],
+  ['English',          26864, 2107, 19, 11, 4, 89.41],
+  ['Martial arts',     22740, 1735, 30, 13, 2,  0.00],
+  ['Football',         17165, 1017, 17,  6, 7,  0.00],
+  ['Science tutoring',  2446,  127,  0,  1, 0,  0.00]
+];
+/* per category: sends, filtered opens, clicks, unsubs, projects, PPR */
+const E1=[['Tutoring',81166,5400,146,96,12,32.36],['Guitar',26555,1533,24,13,4,10.80],
+  ['Handyman',23697,1904,61,25,8,16.38],['Maths tutoring',21972,1415,26,27,7,34.95],
+  ['Piano',21710,1338,32,19,8,8.64],['Singing lessons',20617,964,10,7,0,0],
+  ['English',13452,1084,6,6,0,0],['Martial arts',11385,848,21,8,2,0],
+  ['Football',8592,507,7,3,4,0],['Science tutoring',1227,67,0,1,0,0]];
+const E2=[['Tutoring',80893,5298,147,90,14,82.23],['Guitar',26443,1570,36,16,12,24.19],
+  ['Handyman',23638,1905,52,28,7,133.36],['Maths tutoring',21914,1353,19,8,6,11.33],
+  ['Piano',21621,1346,47,14,10,9.21],['Singing lessons',20537,970,16,5,1,0],
+  ['English',13412,1023,13,5,4,89.41],['Martial arts',11355,887,9,5,0,0],
+  ['Football',8573,510,10,3,3,0],['Science tutoring',1219,60,0,0,0,0]];
+/* push, per category: sends, taps, projects per 1k, PPR per 1k (looser attribution) */
+const PU=[['Handyman',2273,16,14.078,81.16],['Tutoring',1260,5,5.556,12.62],
+  ['Guitar',526,4,7.605,10.27],['Singing lessons',365,1,0,0],['Piano',313,1,3.195,0],
+  ['Maths tutoring',236,3,0,0],['Martial arts',228,1,0,0],['Football',207,2,4.831,30.00],
+  ['English',78,0,38.462,62.95],['Science tutoring',24,0,0,0]];
+const STEPS=[
+  ['Email 1',230373,15060,333,205,45,103.13],
+  ['Email 2',229605,14922,349,174,57,349.73]
+];
+const TOT={s:459978,o:29982,c:682,u:379,b:1375,p:102,r:452.86};
+/* Other buyer_seasonal campaigns, same week, as the comparison */
+const BENCH={label:'Other buyer_seasonal campaigns, same week (w/c 14 Sep)',
+  s:1998242,o:148085,c:2833,u:986,p:335,r:1117.81};
+const PUSH={s:5510,o:33,c:null,projPer1k:8.711,valPer1k:39.36};
+
+const pct=(x,d=2)=>(x*100).toFixed(d)+'%';
+const num=x=>x.toLocaleString('en-GB');
+const gbp=x=>'\u00a3'+x.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+const per1k=(n,s)=>s?n/(s/1000):0;
+const stat=(k,v,f)=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div>
+  <div class="d">${f}</div></div>`;
+const sec=(t,w,b,open)=>`<details class="sec"${open?' open':''}>
+  <summary><h2>${t}</h2><span class="when">${w}</span></summary>
+  <div class="body">${b}</div></details>`;
+
+function bmTable(){
+  const b=BENCH, rows=[
+    ['Open rate (filtered)', TOT.o/TOT.s, b.o/b.s, 2,'up'],
+    ['Click-through rate',   TOT.c/TOT.s, b.c/b.s, 3,'up'],
+    ['Unsubscribe rate',     TOT.u/TOT.s, b.u/b.s, 3,'down'],
+    ['Projects per 1k',      per1k(TOT.p,TOT.s), per1k(b.p,b.s), 3,'up'],
+    ['PPR per 1k',           per1k(TOT.r,TOT.s), per1k(b.r,b.s), 2,'up']
+  ];
+  return `<table class="bm"><thead><tr><th>Metric</th><th>Back to School</th>
+    <th>Other seasonal</th><th>Index</th><th>Read</th></tr></thead><tbody>`+
+    rows.map(([k,v,bv,dp,dir])=>{
+      const idx=bv?v/bv:0, good=dir==='up'?v>bv:v<bv;
+      const cls=Math.abs(idx-1)<0.08?'level':(good?'ahead':'behind');
+      const read=Math.abs(idx-1)<0.08?'In line':(good?'Ahead':'Behind');
+      const f=k.startsWith('PPR')?(x=>gbp(x)):k.startsWith('Projects')?(x=>x.toFixed(dp)):(x=>pct(v===x?v:x,dp));
+      return `<tr><td>${k}</td><td>${f(v)}</td><td>${f(bv)}</td>
+        <td>${idx.toFixed(2)}&times;</td><td class="verdict ${cls}">${read}</td></tr>`;
+    }).join('')+`</tbody></table>
+  <div class="note"><b>Benchmark:</b> ${b.label}, ${num(b.s)} sends. This is the fairest
+    available comparison: same audience type, same week, same campaign group. It is not a
+    control, so none of this is incremental lift.</div>`;
+}
+
+function catTable(){
+  const max=Math.max(...CATS.map(c=>per1k(c[5],c[1])));
+  return `<table class="bm"><thead><tr><th>Trigger category</th><th>Sends</th><th>Open</th>
+      <th>CTR</th><th>Unsub</th><th>Projects</th><th>Proj / 1k</th><th>PPR / 1k</th>
+    </tr></thead><tbody>`+
+    [...CATS].sort((a,b)=>per1k(b[5],b[1])-per1k(a[5],a[1])).map(([n,s,o,c,u,p,r])=>
+      `<tr><td>${n}</td><td>${num(s)}</td><td>${pct(o/s,2)}</td><td>${pct(c/s,3)}</td>
+        <td>${pct(u/s,3)}</td><td>${p}</td>
+        <td>${per1k(p,s).toFixed(3)}<i class="bar" style="width:${max?per1k(p,s)/max*100:0}%"></i></td>
+        <td>${gbp(per1k(r,s))}</td></tr>`).join('')+
+    `<tr><td><b>All</b></td><td><b>${num(TOT.s)}</b></td><td><b>${pct(TOT.o/TOT.s,2)}</b></td>
+      <td><b>${pct(TOT.c/TOT.s,3)}</b></td><td><b>${pct(TOT.u/TOT.s,3)}</b></td>
+      <td><b>${TOT.p}</b></td><td><b>${per1k(TOT.p,TOT.s).toFixed(3)}</b></td>
+      <td><b>${gbp(per1k(TOT.r,TOT.s))}</b></td></tr></tbody></table>`;
+}
+
+function stepDetail(rows,label,note){
+  const t=rows.reduce((a,r)=>({s:a.s+r[1],o:a.o+r[2],c:a.c+r[3],u:a.u+r[4],p:a.p+r[5],r:a.r+r[6]}),
+                      {s:0,o:0,c:0,u:0,p:0,r:0});
+  const max=Math.max(...rows.map(r=>per1k(r[5],r[1])));
+  return `<div class="kpis">
+      ${stat('Sends',num(t.s),'10 categories')}
+      ${stat('Open rate',pct(t.o/t.s,2),num(t.o)+' opens')}
+      ${stat('CTR',pct(t.c/t.s,3),t.c+' clicks')}
+      ${stat('CTOR',pct(t.c/t.o,2),'clicks per open')}
+      ${stat('Unsub rate',pct(t.u/t.s,3),t.u+' unsubs')}
+      ${stat('Projects / 1k',per1k(t.p,t.s).toFixed(3),t.p+' projects')}
+      ${stat('PPR / 1k sends',gbp(per1k(t.r,t.s)),gbp(t.r)+' total')}
+    </div>
+    ${note?`<div class="note">${note}</div>`:''}
+    <p class="barlab" style="margin-top:22px"><span>${label} by trigger category</span></p>
+    <table class="bm"><thead><tr><th>Category</th><th>Sends</th><th>Open</th><th>CTR</th>
+      <th>CTOR</th><th>Unsub</th><th>Proj</th><th>Proj / 1k</th><th>PPR / 1k</th>
+    </tr></thead><tbody>`+
+    [...rows].sort((x,y)=>per1k(y[5],y[1])-per1k(x[5],x[1])).map(([n,sn,o,c,u,p,r])=>
+      `<tr><td>${n}</td><td>${num(sn)}</td><td>${pct(o/sn,2)}</td><td>${pct(c/sn,3)}</td>
+        <td>${o?pct(c/o,2):'<span class="na">n/a</span>'}</td><td>${pct(u/sn,3)}</td>
+        <td>${p}</td>
+        <td>${per1k(p,sn).toFixed(3)}<i class="bar" style="width:${max?per1k(p,sn)/max*100:0}%"></i></td>
+        <td>${gbp(per1k(r,sn))}</td></tr>`).join('')+
+    `<tr><td><b>All</b></td><td><b>${num(t.s)}</b></td><td><b>${pct(t.o/t.s,2)}</b></td>
+      <td><b>${pct(t.c/t.s,3)}</b></td><td><b>${pct(t.c/t.o,2)}</b></td>
+      <td><b>${pct(t.u/t.s,3)}</b></td><td><b>${t.p}</b></td>
+      <td><b>${per1k(t.p,t.s).toFixed(3)}</b></td>
+      <td><b>${gbp(per1k(t.r,t.s))}</b></td></tr></tbody></table>`;
+}
+
+function pushDetail(){
+  const t=PU.reduce((a,r)=>({s:a.s+r[1],o:a.o+r[2]}),{s:0,o:0});
+  return `<div class="kpis">
+      ${stat('Push sends',num(t.s),pct(t.s/TOT.s,1)+' of email volume')}
+      ${stat('Taps',num(t.o),'recorded as opens')}
+      ${stat('Tap rate',pct(t.o/t.s,2),'taps per send')}
+      ${stat('Clicks','n/a','not tracked for push')}
+    </div>
+    <div class="note"><b>Push reached ${pct(t.s/TOT.s,1)} of the email audience</b>, ${num(t.s)}
+      sends against ${num(TOT.s)} emails, and produced ${t.o} taps in total. Push needs the app
+      installed with notifications enabled, so reach rather than creative is the constraint.</div>
+    <p class="barlab" style="margin-top:22px"><span>Push by trigger category</span></p>
+    <table class="bm"><thead><tr><th>Category</th><th>Sends</th><th>Taps</th><th>Tap rate</th>
+      <th>Proj / 1k*</th><th>PPR / 1k*</th></tr></thead><tbody>`+
+    PU.map(([n,sn,o,p1,v1])=>`<tr><td>${n}</td><td>${num(sn)}</td><td>${o}</td>
+      <td>${pct(o/sn,2)}</td><td><span class="na">${p1.toFixed(1)}</span></td>
+      <td><span class="na">${gbp(v1)}</span></td></tr>`).join('')+
+    `<tr><td><b>All</b></td><td><b>${num(t.s)}</b></td><td><b>${t.o}</b></td>
+      <td><b>${pct(t.o/t.s,2)}</b></td><td colspan="2"></td></tr></tbody></table>
+    <div class="note"><b>* Push conversion uses a looser attribution</b> than email: any project
+      within seven days of send regardless of whether the notification was opened. It is not
+      comparable with the email figures and must not be added to them. At these volumes, English
+      showing 38.5 projects per 1k is three projects on 78 sends, so read the column as noise
+      rather than signal.</div>`;
+}
+
+function channelTable(){
+  return `<table class="bm"><thead><tr><th>Channel</th><th>Sends</th><th>Reach vs email</th>
+      <th>Open / tap</th><th>CTR</th><th>Proj / 1k</th><th>PPR / 1k</th></tr></thead><tbody>
+    <tr><td><b>Email</b></td><td>${num(TOT.s)}</td><td>&mdash;</td>
+      <td>${pct(TOT.o/TOT.s,2)}</td><td>${pct(TOT.c/TOT.s,3)}</td>
+      <td>${per1k(TOT.p,TOT.s).toFixed(3)}</td><td>${gbp(per1k(TOT.r,TOT.s))}</td></tr>
+    <tr><td><b>Push</b></td><td>${num(PUSH.s)}</td><td>${pct(PUSH.s/TOT.s,1)}</td>
+      <td>${pct(PUSH.o/PUSH.s,2)}</td><td><span class="na">not tracked</span></td>
+      <td><span class="na">${PUSH.projPer1k.toFixed(1)}*</span></td>
+      <td><span class="na">${gbp(PUSH.valPer1k)}*</span></td></tr>
+    <tr><td>SMS</td><td>0</td><td colspan="5"><span class="na">built but never fired</span></td></tr>
+    <tr><td>WhatsApp</td><td>0</td><td colspan="5"><span class="na">built but never fired</span></td></tr>
+    </tbody></table>
+  <div class="note"><b>SMS and WhatsApp did not fire.</b> The campaign was built with email,
+    push, SMS and WhatsApp on step 1, but only email and push produced sends. Worth checking
+    whether those steps were switched on, since the same pattern appeared in the Moving Home
+    nurture flow earlier in the year.</div>
+  <div class="note"><b>* Push conversion is on a looser attribution</b> than the email row:
+    any project within seven days of send regardless of interaction. Not comparable with
+    email and must not be added to it. Push records a tap as an open and does not populate
+    clicks, so its CTR is blank by design.</div>`;
+}
+
+document.getElementById('p').innerHTML = `
+  <div class="sect"><h2>Campaign at a glance</h2>
+    <span class="when">Sent w/c 14 Sep 2026 &middot; 10 trigger categories</span></div>
+  <p class="barlab"><span>Both emails, all categories, cumulative</span></p>
+  <div class="kpis">
+    ${stat('Sends',num(TOT.s),'2 emails \u00d7 10 categories')}
+    ${stat('Open rate',pct(TOT.o/TOT.s,2),num(TOT.o)+' opens')}
+    ${stat('CTR',pct(TOT.c/TOT.s,3),num(TOT.c)+' clicks')}
+    ${stat('CTOR',pct(TOT.c/TOT.o,2),'clicks per open')}
+    ${stat('Unsub rate',pct(TOT.u/TOT.s,3),TOT.u+' unsubs')}
+    ${stat('Bounce rate',pct(TOT.b/TOT.s,3),num(TOT.b)+' bounces')}
+    ${stat('Projects / 1k',per1k(TOT.p,TOT.s).toFixed(3),TOT.p+' projects')}
+    ${stat('PPR / 1k sends',gbp(per1k(TOT.r,TOT.s)),gbp(TOT.r)+' total')}
+  </div>
+
+  <div class="keyfind"><div class="kf">Read this first</div>
+    <p><b>The campaign converted well and engaged poorly.</b> Open rate of
+      ${pct(TOT.o/TOT.s,2)} is below other seasonal sends that week, but projects per 1k are
+      1.32&times; and PPR per 1k 1.76&times; ahead. Fewer people opened it, and those who did
+      were worth more.</p>
+    <p><b>It is a single burst, not an ongoing flow.</b> Both emails went out in the week
+      commencing 14 September. Everything here is a one-off read, so there is no week-on-week
+      view and no trend to follow.</p>
+    <p><b>The unsubscribe rate is 1.67&times; other seasonal campaigns</b> at
+      ${pct(TOT.u/TOT.s,3)}. Low in absolute terms, but the highest-cost metric in the set
+      and worth watching if this runs again next year.</p></div>
+
+  <div class="sect"><h2>Against other seasonal sends</h2>
+    <span class="when">Same week, same campaign group</span></div>
+  ${bmTable()}
+
+  <div class="sect"><h2>Wins and issues</h2><span class="when">Not significance-tested</span></div>
+  <div class="cols">
+    <div class="col w"><h3>What worked</h3><ul>
+      <li><b>Conversion beat the seasonal benchmark.</b> 0.222 projects per 1k against 0.168,
+        and \u00a30.98 PPR per 1k against \u00a30.56, so 1.32&times; and 1.76&times; ahead.</li>
+      <li><b>Handyman was the standout on revenue.</b> \u00a33.16 per 1k from 47,335 sends,
+        more than three times the campaign average, plus the best open rate at 8.05%.</li>
+      <li><b>Email 2 pulled its weight.</b> 57 projects and \u00a3349.73 against email 1's 45 and
+        \u00a3103.13 on the same volume.</li>
+      <li><b>Piano and Football converted best per send</b> at 0.415 and 0.408 projects per 1k.</li>
+    </ul></div>
+    <div class="col a"><h3>What did not</h3><ul>
+      <li><b>Open rate was below benchmark</b> at 6.52% against 7.41%, so 0.88&times;.</li>
+      <li><b>Unsubscribes ran 1.67&times; other seasonal sends.</b> 379 across the campaign.</li>
+      <li><b>Singing lessons barely worked.</b> 41,154 sends, 4.70% open, 0.063% CTR and one
+        project. The weakest category by some distance despite being the sixth largest by volume.</li>
+      <li><b>Science tutoring produced nothing</b> from 2,446 sends, with zero clicks.</li>
+      <li><b>SMS and WhatsApp never fired</b>, despite being part of the build.</li>
+    </ul></div>
+  </div>
+
+  ${sec('Email 1 performance','10 categories &middot; sent w/c 14 Sep',
+      stepDetail(E1,'Email 1',
+      'The opening send. Slightly more volume than email 2 but fewer projects (45 vs 57) and a '+
+      'quarter of the revenue (' + gbp(103.13) + ' vs ' + gbp(349.73) + '), which is the reverse of what the always-on '+
+      'nurture flows show, where step 1 does nearly all the work.'),true)}
+
+  ${sec('Email 2 performance','10 categories &middot; sent w/c 14 Sep',
+      stepDetail(E2,'Email 2',
+      'The follow-up, and the stronger of the two. Same audience and almost identical volume, '+
+      'but 27% more projects and over three times the revenue. Worth understanding what it did '+
+      'differently before this campaign runs again.'),true)}
+
+  ${sec('Push performance','10 categories &middot; 5,510 sends',pushDetail(),false)}
+
+  ${sec('All categories, both emails combined','Email only',catTable(),false)}
+
+  ${sec('Channel summary','Email, push, SMS, WhatsApp',channelTable(),false)}
+
+  <footer>
+    <h4>How to read this</h4>
+    <ul>
+      <li><b>Scope.</b> Journey 1054654, buyer-side only. Seller-side backtoschool campaigns
+          are excluded because they target a different audience.</li>
+      <li><b>Window.</b> Both emails were sent in the week commencing 14 September 2026. There
+          is no ongoing send, so no weekly trend is shown.</li>
+      <li><b>Conversion</b> is projects submitted and PPR revenue attributed to a send within
+          seven days. It answers what the email touched, not what it caused.</li>
+      <li><b>No control group.</b> This campaign had no holdout, so nothing here is incremental
+          lift. The benchmark is other seasonal campaigns to a comparable audience in the same
+          week, which is the fairest comparison available but still a different audience.</li>
+      <li><b>Not significance-tested.</b> Category-level project counts run from 0 to 26, which
+          is too thin for the differences between categories to clear a significance test.
+          Read the category table as directional.</li>
+      <li><b>Open rate</b> is the filtered open rate, excluding Apple Mail Privacy Protection
+          inflation. <b>Polaris is excluded</b> from the benchmark.</li>
+    </ul>
+  </footer>`;
+</script>
+</body>
+</html>
